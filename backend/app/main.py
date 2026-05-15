@@ -1,5 +1,8 @@
 from pathlib import Path
 
+from fastapi import Depends
+from .auth import LoginRequest, login_check, require_admin
+from .agent_core import AgentChatRequest, agent_reply
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException
 from fastapi import UploadFile, File, Form
 from fastapi.middleware.cors import CORSMiddleware
@@ -24,6 +27,20 @@ from app.upload import save_avatar_file
 app = FastAPI(title="聊天室")
 manager = ConnectionManager()
 
+@app.post("/api/auth/login")
+def admin_login(data: LoginRequest):
+    return login_check(data)
+
+
+@app.get("/api/auth/me")
+def me(admin=Depends(require_admin)):
+    return admin
+
+
+@app.post("/api/agent/chat")
+def agent_chat(data: AgentChatRequest, admin=Depends(require_admin)):
+    reply = agent_reply(data.message)
+    return {"reply": reply}
 
 # backend 目录
 BASE_DIR = Path(__file__).resolve().parent.parent

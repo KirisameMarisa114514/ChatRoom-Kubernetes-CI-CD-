@@ -12,6 +12,7 @@ spec:
       labels:
         app: chat-backend
     spec:
+      serviceAccountName: chat-backend-sa
       terminationGracePeriodSeconds: 5
       containers:
         - name: chat-backend
