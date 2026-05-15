@@ -16,10 +16,13 @@ spec:
       terminationGracePeriodSeconds: 5
       containers:
         - name: chat-backend
-          image: chat-system-chat-backend:latest
+          image: 192.168.30.10:5000/chat-backend:agent-k8s-client-1
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8000
+          envFrom:
+            - secretRef:
+                name: deepseek-secret
 ---
 apiVersion: v1
 kind: Service

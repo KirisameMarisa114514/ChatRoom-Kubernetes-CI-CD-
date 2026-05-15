@@ -1,3 +1,4 @@
+from .llm_client import call_deepseek
 from pydantic import BaseModel
 from .ops_tools import (
     get_k8s_pods,
@@ -34,13 +35,12 @@ def agent_reply(message: str) -> str:
     if any(word in msg for word in ["内存", "磁盘", "资源", "system", "cpu"]):
         return "当前系统资源：\n\n" + get_system_status()
 
-    return (
-        "我是 K8s 运维 Agent，目前支持这些查询：\n"
-        "1. 查看 Pod 状态\n"
-        "2. 查看 Service 状态\n"
-        "3. 查看 Deployment 状态\n"
-        "4. 查看当前镜像版本\n"
-        "5. 查看 registry 镜像仓库\n"
-        "6. 查看系统资源\n\n"
-        "你可以问：当前服务运行情况怎么样？"
+    return call_deepseek(
+        message,
+        system_prompt=(
+            "你是一个 K8s 运维 Agent。"
+            "项目是一个 FastAPI + WebSocket + SQLite + Kubernetes + Jenkins CI/CD 的聊天室系统。"
+            "你可以解释项目架构、运维状态含义、K8s 概念和排错思路。"
+            "不要编造实时状态。实时状态应通过固定工具查询。"
+        )
     )
