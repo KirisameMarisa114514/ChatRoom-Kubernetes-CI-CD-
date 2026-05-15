@@ -1,0 +1,24 @@
+services:
+  chat-backend:
+    build:
+      context: ./backend
+    container_name: chat-backend
+    ports:
+      - "8000:8000"
+    volumes:
+      # 持久化 SQLite 数据库
+      - ./backend/data:/app/data
+
+      # 持久化头像上传文件
+      - ./backend/uploads:/app/uploads
+    restart: unless-stopped
+
+  chat-frontend:
+    build:
+      context: ./frontend
+    container_name: chat-frontend
+    ports:
+      - "8088:80"
+    depends_on:
+      - chat-backend
+    restart: unless-stopped

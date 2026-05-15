@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Chat Room</title>
+
+  <link rel="stylesheet" href="./css/style.css">
+</head>
+
+<body>
+  <div class="app">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-logo">💬</div>
+        <div class="brand-text">
+          <h1>Chat Room</h1>
+        </div>
+      </div>
+
+      <div class="sidebar-card">
+        <h3>项目简介</h3>
+        <p>
+          一个基于 FastAPI、WebSocket 和 SQLite 的简易实时聊天室。
+          当前版本支持注册、登录、房间聊天、消息持久化、历史记录查询与清除。
+        </p>
+      </div>
+
+      <div class="sidebar-card">
+        <h3>连接状态</h3>
+        <div class="status-row">
+          <span>后端地址</span>
+          <span class="status-badge">127.0.0.1:8000</span>
+        </div>
+
+        <div class="status-row">
+          <span>登录状态</span>
+          <span class="status-badge">
+            <span class="status-dot" id="statusDot"></span>
+            <span id="loginStatus">未登录</span>
+          </span>
+        </div>
+
+        <div class="status-row">
+          <span>房间状态</span>
+          <span class="status-badge" id="roomStatus">未进入房间</span>
+        </div>
+      </div>
+      <!-- 新增在线用户卡片：显示当前房间内的在线成员（动态刷新） -->
+      <div class="sidebar-card">
+        <h3>在线用户</h3>
+        <div class="online-users" id="onlineUsers">
+          <div class="empty-online">暂未进入房间</div>
+        </div>
+      </div>      
+    
+    </aside>
+
+    <main class="main">
+      <div class="auth-panel" id="authPanel">
+        <h2>欢迎来到聊天室</h2>
+        <p class="auth-desc">
+          请输入用户名和密码。你可以先注册，再登录进入聊天室。
+          登录成功后，可进入任意房间并查看历史聊天记录。
+        </p>
+
+        <div class="form-row">
+          <input id="username" placeholder="用户名，例如 alice">
+          <input id="password" type="password" placeholder="密码，例如 123456">
+        </div>
+
+        <div class="form-row">
+          <button onclick="register()">注册</button>
+          <button class="secondary" onclick="login()">登录</button>
+        </div>
+
+        <div class="tip" id="authTip">
+          请先注册或登录，登录成功后进入聊天室。
+        </div>
+      </div>
+
+      <div class="chat-panel" id="chatPanel">
+		<div class="chat-header">
+		  <div class="chat-user">
+		    <img class="avatar avatar-img" id="avatarImg" style="display:none;">
+		    <div class="avatar" id="avatarText">U</div>
+		
+		    <div class="chat-user-meta">
+		      <div class="name" id="currentUser">-</div>
+		      <div class="sub">在线聊天 · 历史消息支持</div>
+		
+		      <div class="avatar-upload">
+		        <input
+		          id="avatarFile"
+		          type="file"
+		          accept="image/*"
+		          style="display:none;"
+		          onchange="uploadAvatar()"
+		        >
+		        <button
+		          class="secondary avatar-btn"
+		          type="button"
+		          onclick="document.getElementById('avatarFile').click()"
+		        >
+		          上传头像
+		        </button>
+		      </div>
+		    </div>
+		  </div>
+		
+		  <div class="room-bar">
+		    <span class="room-label">房间</span>
+		    <input id="room" value="room1">
+		    <button onclick="connect()">进入房间</button>
+		    <button class="danger" onclick="clearHistory()">清除历史</button>
+		    <button class="secondary" onclick="logout()">退出登录</button>
+		  </div>
+		</div>
+
+        <div class="messages" id="messages"></div>
+
+        <div class="input-area">
+          <button class="tool-btn" type="button" title="表情（预留）">😊</button>
+
+          <div class="composer">
+            <input id="content" placeholder="输入消息，按 Enter 发送">
+            <button class="tool-btn" type="button" title="文件上传（预留）">📎</button>
+          </div>
+
+          <button class="send-btn" onclick="sendMessage()">发送</button>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script src="./js/state.js"></script>
+  <script src="./js/ui.js"></script>
+  <script src="./js/api.js"></script>
+  <script src="./js/chat.js"></script>
+  <script src="./js/main.js"></script>
+</body>
+</html>
