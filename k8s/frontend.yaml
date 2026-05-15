@@ -12,6 +12,7 @@ spec:
       labels:
         app: chat-frontend
     spec:
+      terminationGracePeriodSeconds: 5
       containers:
         - name: chat-frontend
           image: chat-system-chat-frontend:latest
